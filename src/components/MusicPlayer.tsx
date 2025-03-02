@@ -5,8 +5,9 @@ import { cn } from '@/lib/utils';
 import { 
   Play, Pause, SkipBack, SkipForward, 
   Repeat, Shuffle, Volume2, MoreHorizontal, 
-  Heart
+  Heart, ChevronDown
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 type Song = {
   id: string;
@@ -48,6 +49,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationRef = useRef<number>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Reset player state when song changes
@@ -121,9 +123,21 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     }
   };
 
+  const handleMiniPlayerClick = () => {
+    if (isMinimized) {
+      navigate('/player');
+    }
+  };
+
   if (isMinimized) {
     return (
-      <div className={cn("flex items-center bg-background/60 backdrop-blur-lg p-3 border-t", className)}>
+      <div 
+        className={cn(
+          "flex items-center bg-background/60 backdrop-blur-lg p-3 border-t cursor-pointer transition-all duration-300 hover:bg-background/80", 
+          className
+        )}
+        onClick={handleMiniPlayerClick}
+      >
         <img 
           src={song.coverUrl} 
           alt={song.album} 
@@ -136,19 +150,19 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
         <div className="flex space-x-2">
           <button 
             className="media-button h-8 w-8"
-            onClick={onPrev}
+            onClick={(e) => { e.stopPropagation(); onPrev(); }}
           >
             <SkipBack size={18} />
           </button>
           <button 
             className="media-button h-8 w-8"
-            onClick={togglePlayPause}
+            onClick={(e) => { e.stopPropagation(); togglePlayPause(); }}
           >
             {isPlaying ? <Pause size={18} /> : <Play size={18} />}
           </button>
           <button 
             className="media-button h-8 w-8"
-            onClick={onNext}
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
           >
             <SkipForward size={18} />
           </button>
@@ -166,101 +180,83 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   }
 
   return (
-    <div className={cn("flex flex-col relative w-full h-full", className)}>
-      {/* Blurred background */}
-      <div className="relative w-full h-full overflow-hidden">
+    <div className={cn("flex flex-col relative w-full h-full bg-black", className)}>
+      {/* Full-screen background image */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
         <img
           src={song.coverUrl}
           alt={song.album}
-          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-40 scale-110"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
         />
-        <div className="player-backdrop" />
-        
-        {/* Album art and controls */}
-        <div className="relative z-10 flex flex-col h-full pt-8 px-6 pb-10">
-          <div className="flex-1 flex flex-col items-center justify-center max-w-md mx-auto w-full animate-fade-in">
-            <div className="relative aspect-square w-full max-w-xs rounded-md overflow-hidden shadow-2xl mb-8">
-              <img
-                src={song.coverUrl}
-                alt={song.album}
-                className="w-full h-full object-cover animate-scale-in"
-              />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
+        {/* Song info at bottom */}
+        <div className="mt-auto">
+          <h2 className="text-3xl font-bold text-white mb-1">{song.title}</h2>
+          <p className="text-lg text-white/80 mb-4">{song.artist} • {song.album}</p>
+          
+          {/* Time slider */}
+          <div className="w-full mb-2">
+            <Slider 
+              defaultValue={[0]} 
+              value={[currentTime]} 
+              max={song.duration} 
+              step={0.1} 
+              onValueChange={onSeek}
+              className="mb-1"
+            />
+            <div className="flex justify-between text-xs text-white/70">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(song.duration)}</span>
             </div>
+          </div>
+          
+          {/* Playback controls */}
+          <div className="flex items-center justify-between w-full mt-6 mb-2">
+            <button 
+              className={cn("media-button h-12 w-12 text-white", 
+                isShuffle ? "text-primary" : "text-white")}
+              onClick={toggleShuffle}
+            >
+              <Shuffle size={22} />
+            </button>
             
-            <div className="w-full text-center mb-8">
-              <h2 className="text-2xl font-bold tracking-tight truncate">{song.title}</h2>
-              <p className="text-base text-muted-foreground truncate">{song.artist}</p>
-              <p className="text-sm text-muted-foreground/80 truncate">{song.album}</p>
-            </div>
+            <button 
+              className="media-button h-14 w-14 text-white"
+              onClick={onPrev}
+            >
+              <SkipBack size={28} />
+            </button>
             
-            {/* Time slider */}
-            <div className="w-full mb-6">
-              <Slider 
-                defaultValue={[0]} 
-                value={[currentTime]} 
-                max={song.duration} 
-                step={0.1} 
-                onValueChange={onSeek}
-                className="mb-2"
-              />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(song.duration)}</span>
-              </div>
-            </div>
+            <button 
+              className="media-button h-16 w-16 bg-white text-black hover:bg-white/90 rounded-full"
+              onClick={togglePlayPause}
+            >
+              {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+            </button>
             
-            {/* Playback controls */}
-            <div className="flex items-center justify-between w-full mb-6">
-              <button 
-                className={cn("media-button h-10 w-10", 
-                  isShuffle ? "text-primary" : "text-foreground")}
-                onClick={toggleShuffle}
-              >
-                <Shuffle size={18} />
-              </button>
-              
-              <button 
-                className="media-button h-12 w-12"
-                onClick={onPrev}
-              >
-                <SkipBack size={22} />
-              </button>
-              
-              <button 
-                className="media-button h-16 w-16 bg-primary text-primary-foreground hover:bg-primary/90"
-                onClick={togglePlayPause}
-              >
-                {isPlaying ? <Pause size={30} /> : <Play size={30} className="ml-1" />}
-              </button>
-              
-              <button 
-                className="media-button h-12 w-12"
-                onClick={onNext}
-              >
-                <SkipForward size={22} />
-              </button>
-              
-              <button 
-                className={cn("media-button h-10 w-10", 
-                  repeatMode > 0 ? "text-primary" : "text-foreground")}
-                onClick={toggleRepeat}
-              >
-                <Repeat size={18} />
-                {repeatMode === 2 && <span className="absolute text-[8px] font-bold">1</span>}
-              </button>
-            </div>
+            <button 
+              className="media-button h-14 w-14 text-white"
+              onClick={onNext}
+            >
+              <SkipForward size={28} />
+            </button>
             
-            {/* Volume control */}
-            <div className="flex items-center w-full">
-              <Volume2 size={18} className="mr-2 text-muted-foreground" />
-              <Slider 
-                defaultValue={[80]} 
-                value={[volume]} 
-                max={100} 
-                step={1} 
-                onValueChange={handleVolumeChange}
-              />
-            </div>
+            <button 
+              className={cn("media-button h-12 w-12", 
+                repeatMode > 0 ? "text-primary" : "text-white")}
+              onClick={toggleRepeat}
+            >
+              <Repeat size={22} />
+              {repeatMode === 2 && <span className="absolute text-[8px] font-bold">1</span>}
+            </button>
+          </div>
+          
+          <div className="flex justify-center w-full mt-4">
+            <ChevronDown size={24} className="text-white/60" />
           </div>
         </div>
       </div>
