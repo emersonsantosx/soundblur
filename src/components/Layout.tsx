@@ -5,7 +5,7 @@ import {
   Library, 
   Compass, 
   Settings as SettingsIcon, 
-  MusicSquare,
+  Music,
   Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -27,7 +27,7 @@ const Layout = () => {
       {!isPlayerPage && (
         <header className="h-16 border-b flex items-center justify-between px-4">
           <Link to="/" className="flex items-center space-x-2">
-            <MusicSquare className="h-6 w-6 text-primary" />
+            <Music className="h-6 w-6 text-primary" />
             <span className="font-semibold text-lg">Groove Music</span>
           </Link>
           
@@ -98,7 +98,7 @@ const Layout = () => {
               className="flex flex-col items-center justify-center -mt-6"
             >
               <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center shadow-md">
-                <MusicSquare size={24} className="text-primary-foreground" />
+                <Music size={24} className="text-primary-foreground" />
               </div>
               <span className="text-xs mt-1 text-primary">Now Playing</span>
             </Link>
