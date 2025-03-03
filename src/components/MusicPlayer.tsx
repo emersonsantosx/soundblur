@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
@@ -51,7 +50,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Reset player state when song changes
     setCurrentTime(0);
     if (isPlaying) {
       audioRef.current?.play();
@@ -107,13 +105,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
   const handleEnded = () => {
     if (repeatMode === 2) {
-      // Repeat one
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
       }
     } else {
-      // Go to next song
       onNext();
     }
   };
@@ -183,7 +179,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       className={cn("relative w-full h-full", className)}
       onClick={toggleControlsVisibility}
     >
-      {/* Full-screen background image */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <img
           src={song.coverUrl}
@@ -193,15 +188,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
         <div className="absolute inset-0 bg-black/50" />
       </div>
       
-      {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
-        {/* Empty space at top */}
         <div></div>
 
-        {/* Controls at bottom with album info positioned just above them */}
         <div className="mt-auto">
-          {/* Album info - always visible, positioned above the controls */}
-          <div className="flex items-center mb-8">
+          <div className={cn("flex items-center mb-8 transition-all duration-500",
+            isControlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+          )}>
             <img 
               src={song.coverUrl} 
               alt={song.album} 
@@ -209,11 +202,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             />
             <div className="ml-4">
               <h2 className="text-xl font-bold text-white">{song.title}</h2>
-              <p className="text-white/80">{song.artist}</p>
+              <p className="text-white/80">{song.artist} • {song.album}</p>
             </div>
           </div>
 
-          {/* Time slider and timestamps with new design */}
           <div className={cn("w-full transition-all duration-500", 
             isControlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
           )}>
@@ -230,7 +222,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
               className="mb-8"
             />
             
-            {/* Playback controls matching the reference image */}
             <div className="flex items-center justify-between w-full">
               <button className="media-button text-white p-2">
                 <SkipBack size={24} onClick={onPrev} />
@@ -263,7 +254,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
         </div>
       </div>
       
-      {/* Audio element */}
       <audio
         ref={audioRef}
         src={song.audioUrl}
