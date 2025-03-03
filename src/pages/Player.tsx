@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useMusic } from '@/context/MusicContext';
 import MusicPlayer from '@/components/MusicPlayer';
-import { ArrowLeft, Search } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Player = () => {
@@ -44,16 +44,12 @@ const Player = () => {
   
   return (
     <div id="player-container" className="relative h-full w-full overflow-hidden transition-all duration-300">
-      <div className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-4">
+      <div className="absolute top-0 left-0 right-0 z-20 p-4">
         <button 
           className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
           onClick={handleBack}
         >
           <ArrowLeft size={24} />
-        </button>
-        <h1 className="text-white text-xl font-bold">NOW PLAYING</h1>
-        <button className="p-2 text-white hover:bg-white/10 rounded-full transition-colors">
-          <Search size={24} />
         </button>
       </div>
       

@@ -4,8 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { 
   Play, Pause, SkipBack, SkipForward, 
-  Repeat, Shuffle, Volume2, MoreHorizontal, 
-  Heart, ChevronDown
+  Repeat, Shuffle, Heart
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -195,8 +194,17 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
         {/* Song info at bottom */}
         <div className="mt-auto">
-          <h2 className="text-3xl font-bold text-white mb-1">{song.title}</h2>
-          <p className="text-lg text-white/80 mb-4">{song.artist} • {song.album}</p>
+          <div className="flex items-center mb-6">
+            <img 
+              src={song.coverUrl} 
+              alt={song.album} 
+              className="h-16 w-16 rounded-md object-cover shadow-lg" 
+            />
+            <div className="ml-4">
+              <h2 className="text-2xl font-bold text-white">{song.title}</h2>
+              <p className="text-white/80">{song.artist} • {song.album}</p>
+            </div>
+          </div>
           
           {/* Time slider */}
           <div className="w-full mb-2">
@@ -218,28 +226,28 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
           <div className="flex items-center justify-between w-full mt-6 mb-2">
             <button 
               className={cn("media-button h-12 w-12 text-white", 
-                isShuffle ? "text-primary" : "text-white")}
+                isShuffle ? "text-primary" : "text-white/80")}
               onClick={toggleShuffle}
             >
               <Shuffle size={22} />
             </button>
             
             <button 
-              className="media-button h-14 w-14 text-white"
+              className="media-button h-14 w-14 text-white/90"
               onClick={onPrev}
             >
               <SkipBack size={28} />
             </button>
             
             <button 
-              className="media-button h-16 w-16 bg-white text-black hover:bg-white/90 rounded-full"
+              className="media-button h-16 w-16 bg-white text-black hover:bg-white/90 rounded-full flex items-center justify-center"
               onClick={togglePlayPause}
             >
               {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
             </button>
             
             <button 
-              className="media-button h-14 w-14 text-white"
+              className="media-button h-14 w-14 text-white/90"
               onClick={onNext}
             >
               <SkipForward size={28} />
@@ -247,7 +255,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             
             <button 
               className={cn("media-button h-12 w-12", 
-                repeatMode > 0 ? "text-primary" : "text-white")}
+                repeatMode > 0 ? "text-primary" : "text-white/80")}
               onClick={toggleRepeat}
             >
               <Repeat size={22} />
@@ -255,8 +263,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             </button>
           </div>
           
-          <div className="flex justify-center w-full mt-4">
-            <ChevronDown size={24} className="text-white/60" />
+          <div className="flex justify-center mt-4">
+            <button 
+              className={cn("media-button h-10 w-10", 
+                isLiked ? "text-primary" : "text-white/80")}
+              onClick={toggleLike}
+            >
+              <Heart size={22} fill={isLiked ? "currentColor" : "none"} />
+            </button>
           </div>
         </div>
       </div>

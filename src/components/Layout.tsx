@@ -65,7 +65,7 @@ const Layout = () => {
       {/* Mini Player */}
       {showMiniPlayer && currentSong && (
         <div 
-          className="fixed bottom-[4.5rem] md:bottom-0 left-0 right-0 z-30 transition-transform duration-300 transform hover:translate-y-[-4px]"
+          className="fixed bottom-[4.5rem] md:bottom-0 left-0 right-0 z-30 transition-transform duration-300 transform hover:translate-y-[-4px] cursor-pointer"
           onClick={handleMiniPlayerClick}
         >
           <MusicPlayer 
@@ -101,18 +101,6 @@ const Layout = () => {
             <Compass size={24} />
             <span className="text-xs mt-1">Explore</span>
           </Link>
-          
-          {currentSong && (
-            <Link
-              to="/player"
-              className="flex flex-col items-center justify-center -mt-6"
-            >
-              <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center shadow-md">
-                <Music size={24} className="text-primary-foreground" />
-              </div>
-              <span className="text-xs mt-1 text-primary">Now Playing</span>
-            </Link>
-          )}
           
           <Link 
             to="/settings"
