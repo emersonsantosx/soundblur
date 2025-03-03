@@ -195,10 +195,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
-        {/* Album info at top */}
-        <div>
-          {/* Album info - always visible */}
-          <div className="flex items-center mt-4">
+        {/* Empty space at top */}
+        <div></div>
+
+        {/* Controls at bottom with album info positioned just above them */}
+        <div className="mt-auto">
+          {/* Album info - always visible, positioned above the controls */}
+          <div className="flex items-center mb-8">
             <img 
               src={song.coverUrl} 
               alt={song.album} 
@@ -209,10 +212,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
               <p className="text-white/80">{song.artist}</p>
             </div>
           </div>
-        </div>
 
-        {/* Controls at bottom */}
-        <div className="mt-auto">
           {/* Time slider and timestamps with new design */}
           <div className={cn("w-full transition-all duration-500", 
             isControlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
