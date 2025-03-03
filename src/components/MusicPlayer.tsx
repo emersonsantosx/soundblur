@@ -195,7 +195,23 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
-        {/* Song info at top */}
+        {/* Album info at top */}
+        <div>
+          {/* Album info - always visible */}
+          <div className="flex items-center mt-4">
+            <img 
+              src={song.coverUrl} 
+              alt={song.album} 
+              className="h-16 w-16 rounded-md object-cover shadow-lg" 
+            />
+            <div className="ml-4">
+              <h2 className="text-xl font-bold text-white">{song.title}</h2>
+              <p className="text-white/80">{song.artist}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Controls at bottom */}
         <div className="mt-auto">
           {/* Time slider and timestamps with new design */}
           <div className={cn("w-full transition-all duration-500", 
@@ -242,19 +258,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
               <button className="media-button text-white p-2">
                 <MoreHorizontal size={22} />
               </button>
-            </div>
-          </div>
-          
-          {/* Album info at bottom - always visible */}
-          <div className="flex items-center mt-8">
-            <img 
-              src={song.coverUrl} 
-              alt={song.album} 
-              className="h-16 w-16 rounded-md object-cover shadow-lg" 
-            />
-            <div className="ml-4">
-              <h2 className="text-xl font-bold text-white">{song.title}</h2>
-              <p className="text-white/80">{song.artist}</p>
             </div>
           </div>
         </div>
