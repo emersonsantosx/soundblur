@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useMusic } from '@/context/MusicContext';
 import MusicPlayer from '@/components/MusicPlayer';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Player = () => {
@@ -49,7 +49,7 @@ const Player = () => {
           className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
           onClick={handleBack}
         >
-          <ArrowLeft size={24} />
+          <ChevronDown size={24} />
         </button>
       </div>
       

@@ -4,7 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { 
   Play, Pause, SkipBack, SkipForward, 
-  Repeat, Shuffle, Heart
+  RefreshCw, Shuffle, MoreHorizontal
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const [volume, setVolume] = useState(80);
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState(0); // 0: no repeat, 1: repeat all, 2: repeat one
-  const [isLiked, setIsLiked] = useState(false);
+  const [isControlsVisible, setIsControlsVisible] = useState(true);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationRef = useRef<number>();
@@ -105,10 +105,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     setIsShuffle(!isShuffle);
   };
 
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
-  };
-
   const handleEnded = () => {
     if (repeatMode === 2) {
       // Repeat one
@@ -126,6 +122,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     if (isMinimized) {
       navigate('/player');
     }
+  };
+
+  const toggleControlsVisibility = () => {
+    setIsControlsVisible(!isControlsVisible);
   };
 
   if (isMinimized) {
@@ -179,98 +179,83 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   }
 
   return (
-    <div className={cn("flex flex-col relative w-full h-full bg-black", className)}>
+    <div 
+      className={cn("relative w-full h-full", className)}
+      onClick={toggleControlsVisibility}
+    >
       {/* Full-screen background image */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <img
           src={song.coverUrl}
           alt={song.album}
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
       
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
-        {/* Song info at bottom */}
+        {/* Song info at top */}
         <div className="mt-auto">
-          <div className="flex items-center mb-6">
-            <img 
-              src={song.coverUrl} 
-              alt={song.album} 
-              className="h-16 w-16 rounded-md object-cover shadow-lg" 
-            />
-            <div className="ml-4">
-              <h2 className="text-2xl font-bold text-white">{song.title}</h2>
-              <p className="text-white/80">{song.artist} • {song.album}</p>
+          {/* Time slider and timestamps with new design */}
+          <div className={cn("w-full transition-all duration-500", 
+            isControlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+          )}>
+            <div className="flex justify-between text-xs text-white mb-1">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(song.duration)}</span>
             </div>
-          </div>
-          
-          {/* Time slider */}
-          <div className="w-full mb-2">
             <Slider 
               defaultValue={[0]} 
               value={[currentTime]} 
               max={song.duration} 
               step={0.1} 
               onValueChange={onSeek}
-              className="mb-1"
+              className="mb-8"
             />
-            <div className="flex justify-between text-xs text-white/70">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(song.duration)}</span>
+            
+            {/* Playback controls matching the reference image */}
+            <div className="flex items-center justify-between w-full">
+              <button className="media-button text-white p-2">
+                <SkipBack size={24} onClick={onPrev} />
+              </button>
+              
+              <button 
+                className="media-button text-white p-2"
+                onClick={togglePlayPause}
+              >
+                {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-1" />}
+              </button>
+              
+              <button className="media-button text-white p-2">
+                <SkipForward size={24} onClick={onNext} />
+              </button>
+              
+              <button className="media-button text-white p-2">
+                <RefreshCw size={22} onClick={toggleRepeat} />
+              </button>
+              
+              <button className="media-button text-white p-2">
+                <Shuffle size={22} onClick={toggleShuffle} />
+              </button>
+              
+              <button className="media-button text-white p-2">
+                <MoreHorizontal size={22} />
+              </button>
             </div>
           </div>
           
-          {/* Playback controls */}
-          <div className="flex items-center justify-between w-full mt-6 mb-2">
-            <button 
-              className={cn("media-button h-12 w-12 text-white", 
-                isShuffle ? "text-primary" : "text-white/80")}
-              onClick={toggleShuffle}
-            >
-              <Shuffle size={22} />
-            </button>
-            
-            <button 
-              className="media-button h-14 w-14 text-white/90"
-              onClick={onPrev}
-            >
-              <SkipBack size={28} />
-            </button>
-            
-            <button 
-              className="media-button h-16 w-16 bg-white text-black hover:bg-white/90 rounded-full flex items-center justify-center"
-              onClick={togglePlayPause}
-            >
-              {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
-            </button>
-            
-            <button 
-              className="media-button h-14 w-14 text-white/90"
-              onClick={onNext}
-            >
-              <SkipForward size={28} />
-            </button>
-            
-            <button 
-              className={cn("media-button h-12 w-12", 
-                repeatMode > 0 ? "text-primary" : "text-white/80")}
-              onClick={toggleRepeat}
-            >
-              <Repeat size={22} />
-              {repeatMode === 2 && <span className="absolute text-[8px] font-bold">1</span>}
-            </button>
-          </div>
-          
-          <div className="flex justify-center mt-4">
-            <button 
-              className={cn("media-button h-10 w-10", 
-                isLiked ? "text-primary" : "text-white/80")}
-              onClick={toggleLike}
-            >
-              <Heart size={22} fill={isLiked ? "currentColor" : "none"} />
-            </button>
+          {/* Album info at bottom - always visible */}
+          <div className="flex items-center mt-8">
+            <img 
+              src={song.coverUrl} 
+              alt={song.album} 
+              className="h-16 w-16 rounded-md object-cover shadow-lg" 
+            />
+            <div className="ml-4">
+              <h2 className="text-xl font-bold text-white">{song.title}</h2>
+              <p className="text-white/80">{song.artist}</p>
+            </div>
           </div>
         </div>
       </div>
