@@ -8,6 +8,7 @@ interface AlbumDisplayProps {
   artist: string;
   album: string;
   isVisible: boolean;
+  isExpanded: boolean;
 }
 
 const AlbumDisplay: React.FC<AlbumDisplayProps> = ({
@@ -15,12 +16,21 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = ({
   title,
   artist,
   album,
-  isVisible
+  isVisible,
+  isExpanded
 }) => {
   return (
-    <div className={cn("flex items-center mb-8 transition-all duration-500",
-      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
-    )}>
+    <div 
+      className={cn(
+        "flex items-center transition-all duration-500",
+        isExpanded 
+          ? "mb-8" 
+          : "mb-40", // Increased margin to make space for the hidden controls
+        isVisible 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-16"
+      )}
+    >
       <img 
         src={coverUrl} 
         alt={album} 

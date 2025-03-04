@@ -146,25 +146,30 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             title={song.title}
             artist={song.artist}
             album={song.album}
-            isVisible={isControlsVisible}
+            isVisible={true} // Always keep it visible
+            isExpanded={isControlsVisible} // Control position with isExpanded prop
           />
 
-          <ProgressBar
-            currentTime={currentTime}
-            duration={song.duration}
-            onSeek={onSeek}
-            isVisible={isControlsVisible}
-          />
-          
-          <PlayerControls
-            isPlaying={isPlaying}
-            onPlayPause={togglePlayPause}
-            onNext={onNext}
-            onPrev={onPrev}
-            onToggleRepeat={toggleRepeat}
-            onToggleShuffle={toggleShuffle}
-            isVisible={isControlsVisible}
-          />
+          {isControlsVisible && (
+            <>
+              <ProgressBar
+                currentTime={currentTime}
+                duration={song.duration}
+                onSeek={onSeek}
+                isVisible={true}
+              />
+              
+              <PlayerControls
+                isPlaying={isPlaying}
+                onPlayPause={togglePlayPause}
+                onNext={onNext}
+                onPrev={onPrev}
+                onToggleRepeat={toggleRepeat}
+                onToggleShuffle={toggleShuffle}
+                isVisible={true}
+              />
+            </>
+          )}
         </div>
       </div>
       
