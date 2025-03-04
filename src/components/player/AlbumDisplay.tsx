@@ -25,7 +25,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = ({
         "flex items-center transition-all duration-500",
         isExpanded 
           ? "mb-8 translate-y-0" 
-          : "mb-0 translate-y-40", // This will make it slide down when controls are hidden
+          : "mb-0 translate-y-40", // Isso fará com que deslize para baixo quando os controles estiverem ocultos
         isVisible 
           ? "opacity-100" 
           : "opacity-0"

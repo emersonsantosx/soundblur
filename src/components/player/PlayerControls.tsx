@@ -26,9 +26,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({
   isVisible
 }) => {
   return (
-    <div className={cn("flex items-center justify-between w-full transition-all duration-500",
-      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
-    )}>
+    <div className="flex items-center justify-between w-full mt-2">
       <button className="media-button text-white p-2" onClick={onPrev}>
         <SkipBack size={24} />
       </button>

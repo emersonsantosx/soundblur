@@ -50,7 +50,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const togglePlayPause = () => {
     if (isPlaying) {
       audioRef.current?.pause();
-      cancelAnimationFrame(animationRef.current!);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     } else {
       audioRef.current?.play();
       animationRef.current = requestAnimationFrame(updateProgress);
@@ -140,7 +142,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
         <div></div>
 
-        <div className="mt-auto space-y-4">
+        <div className="mt-auto">
           <AlbumDisplay
             coverUrl={song.coverUrl}
             title={song.title}
@@ -150,17 +152,19 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             isExpanded={isControlsVisible}
           />
 
-          <div className={cn(
-            "transition-all duration-500",
-            isControlsVisible 
-              ? "opacity-100 translate-y-0 h-auto" 
-              : "opacity-0 translate-y-16 h-0 overflow-hidden"
-          )}>
+          <div 
+            className={cn(
+              "transition-all duration-500 overflow-hidden",
+              isControlsVisible 
+                ? "max-h-96 opacity-100" 
+                : "max-h-0 opacity-0"
+            )}
+          >
             <ProgressBar
               currentTime={currentTime}
               duration={song.duration}
               onSeek={onSeek}
-              isVisible={true}
+              isVisible={isControlsVisible}
             />
             
             <PlayerControls
@@ -170,7 +174,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
               onPrev={onPrev}
               onToggleRepeat={toggleRepeat}
               onToggleShuffle={toggleShuffle}
-              isVisible={true}
+              isVisible={isControlsVisible}
             />
           </div>
         </div>

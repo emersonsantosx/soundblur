@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useMusic } from '@/context/MusicContext';
 import MusicPlayer from '@/components/MusicPlayer';
-import { ArrowLeft, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Player = () => {

@@ -18,7 +18,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   isVisible
 }) => {
   return (
-    <div className="w-full mb-8">
+    <div className="w-full mb-4">
       <div className="flex justify-between text-xs text-white mb-1">
         <span>{formatTime(currentTime)}</span>
         <span>{formatTime(duration)}</span>
