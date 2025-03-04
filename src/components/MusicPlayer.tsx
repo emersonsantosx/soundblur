@@ -1,27 +1,12 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { 
-  Play, Pause, SkipBack, SkipForward, 
-  RefreshCw, Shuffle, MoreHorizontal
-} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-type Song = {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  coverUrl: string;
-  audioUrl: string;
-  duration: number;
-};
-
-const formatTime = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-};
+import { Song } from '@/types/music';
+import AlbumDisplay from './player/AlbumDisplay';
+import ProgressBar from './player/ProgressBar';
+import PlayerControls from './player/PlayerControls';
+import MiniPlayer from './player/MiniPlayer';
 
 interface MusicPlayerProps {
   song: Song;
@@ -126,51 +111,15 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
   if (isMinimized) {
     return (
-      <div 
-        className={cn(
-          "flex items-center bg-background/60 backdrop-blur-lg p-3 border-t cursor-pointer transition-all duration-300 hover:bg-background/80", 
-          className
-        )}
-        onClick={handleMiniPlayerClick}
-      >
-        <img 
-          src={song.coverUrl} 
-          alt={song.album} 
-          className="h-10 w-10 rounded-md object-cover" 
-        />
-        <div className="ml-3 flex-1 min-w-0">
-          <p className="text-sm font-medium truncate">{song.title}</p>
-          <p className="text-xs text-muted-foreground truncate">{song.artist}</p>
-        </div>
-        <div className="flex space-x-2">
-          <button 
-            className="media-button h-8 w-8"
-            onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          >
-            <SkipBack size={18} />
-          </button>
-          <button 
-            className="media-button h-8 w-8"
-            onClick={(e) => { e.stopPropagation(); togglePlayPause(); }}
-          >
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-          </button>
-          <button 
-            className="media-button h-8 w-8"
-            onClick={(e) => { e.stopPropagation(); onNext(); }}
-          >
-            <SkipForward size={18} />
-          </button>
-        </div>
-        
-        <audio
-          ref={audioRef}
-          src={song.audioUrl}
-          onEnded={handleEnded}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-        />
-      </div>
+      <MiniPlayer
+        song={song}
+        isPlaying={isPlaying}
+        onNext={onNext}
+        onPrev={onPrev}
+        onPlayPause={togglePlayPause}
+        onMiniPlayerClick={handleMiniPlayerClick}
+        className={className}
+      />
     );
   }
 
@@ -192,65 +141,30 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
         <div></div>
 
         <div className="mt-auto">
-          <div className={cn("flex items-center mb-8 transition-all duration-500",
-            isControlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
-          )}>
-            <img 
-              src={song.coverUrl} 
-              alt={song.album} 
-              className="h-16 w-16 rounded-md object-cover shadow-lg" 
-            />
-            <div className="ml-4">
-              <h2 className="text-xl font-bold text-white">{song.title}</h2>
-              <p className="text-white/80">{song.artist} • {song.album}</p>
-            </div>
-          </div>
+          <AlbumDisplay
+            coverUrl={song.coverUrl}
+            title={song.title}
+            artist={song.artist}
+            album={song.album}
+            isVisible={isControlsVisible}
+          />
 
-          <div className={cn("w-full transition-all duration-500", 
-            isControlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
-          )}>
-            <div className="flex justify-between text-xs text-white mb-1">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(song.duration)}</span>
-            </div>
-            <Slider 
-              defaultValue={[0]} 
-              value={[currentTime]} 
-              max={song.duration} 
-              step={0.1} 
-              onValueChange={onSeek}
-              className="mb-8"
-            />
-            
-            <div className="flex items-center justify-between w-full">
-              <button className="media-button text-white p-2">
-                <SkipBack size={24} onClick={onPrev} />
-              </button>
-              
-              <button 
-                className="media-button text-white p-2"
-                onClick={togglePlayPause}
-              >
-                {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-1" />}
-              </button>
-              
-              <button className="media-button text-white p-2">
-                <SkipForward size={24} onClick={onNext} />
-              </button>
-              
-              <button className="media-button text-white p-2">
-                <RefreshCw size={22} onClick={toggleRepeat} />
-              </button>
-              
-              <button className="media-button text-white p-2">
-                <Shuffle size={22} onClick={toggleShuffle} />
-              </button>
-              
-              <button className="media-button text-white p-2">
-                <MoreHorizontal size={22} />
-              </button>
-            </div>
-          </div>
+          <ProgressBar
+            currentTime={currentTime}
+            duration={song.duration}
+            onSeek={onSeek}
+            isVisible={isControlsVisible}
+          />
+          
+          <PlayerControls
+            isPlaying={isPlaying}
+            onPlayPause={togglePlayPause}
+            onNext={onNext}
+            onPrev={onPrev}
+            onToggleRepeat={toggleRepeat}
+            onToggleShuffle={toggleShuffle}
+            isVisible={isControlsVisible}
+          />
         </div>
       </div>
       
