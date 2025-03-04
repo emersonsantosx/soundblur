@@ -18,9 +18,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   isVisible
 }) => {
   return (
-    <div className={cn("w-full transition-all duration-500", 
-      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
-    )}>
+    <div className="w-full mb-8">
       <div className="flex justify-between text-xs text-white mb-1">
         <span>{formatTime(currentTime)}</span>
         <span>{formatTime(duration)}</span>
@@ -31,7 +29,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         max={duration} 
         step={0.1} 
         onValueChange={onSeek}
-        className="mb-8"
       />
     </div>
   );

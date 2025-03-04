@@ -140,36 +140,39 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       <div className="relative z-10 flex flex-col h-full justify-between px-4 py-6">
         <div></div>
 
-        <div className="mt-auto">
+        <div className="mt-auto space-y-4">
           <AlbumDisplay
             coverUrl={song.coverUrl}
             title={song.title}
             artist={song.artist}
             album={song.album}
-            isVisible={true} // Always keep it visible
-            isExpanded={isControlsVisible} // Control position with isExpanded prop
+            isVisible={true} 
+            isExpanded={isControlsVisible}
           />
 
-          {isControlsVisible && (
-            <>
-              <ProgressBar
-                currentTime={currentTime}
-                duration={song.duration}
-                onSeek={onSeek}
-                isVisible={true}
-              />
-              
-              <PlayerControls
-                isPlaying={isPlaying}
-                onPlayPause={togglePlayPause}
-                onNext={onNext}
-                onPrev={onPrev}
-                onToggleRepeat={toggleRepeat}
-                onToggleShuffle={toggleShuffle}
-                isVisible={true}
-              />
-            </>
-          )}
+          <div className={cn(
+            "transition-all duration-500",
+            isControlsVisible 
+              ? "opacity-100 translate-y-0 h-auto" 
+              : "opacity-0 translate-y-16 h-0 overflow-hidden"
+          )}>
+            <ProgressBar
+              currentTime={currentTime}
+              duration={song.duration}
+              onSeek={onSeek}
+              isVisible={true}
+            />
+            
+            <PlayerControls
+              isPlaying={isPlaying}
+              onPlayPause={togglePlayPause}
+              onNext={onNext}
+              onPrev={onPrev}
+              onToggleRepeat={toggleRepeat}
+              onToggleShuffle={toggleShuffle}
+              isVisible={true}
+            />
+          </div>
         </div>
       </div>
       
