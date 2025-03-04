@@ -9,6 +9,8 @@ interface AlbumDisplayProps {
   album: string;
   isVisible: boolean;
   isExpanded: boolean;
+  onArtistClick?: () => void;
+  onAlbumClick?: () => void;
 }
 
 const AlbumDisplay: React.FC<AlbumDisplayProps> = ({
@@ -17,7 +19,9 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = ({
   artist,
   album,
   isVisible,
-  isExpanded
+  isExpanded,
+  onArtistClick,
+  onAlbumClick
 }) => {
   return (
     <div 
@@ -38,7 +42,27 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = ({
       />
       <div className="ml-4">
         <h2 className="text-xl font-bold text-white">{title}</h2>
-        <p className="text-white/80">{artist} • {album}</p>
+        <p className="text-white/80">
+          <span 
+            className={cn("transition-colors", onArtistClick && "cursor-pointer hover:text-primary")}
+            onClick={onArtistClick && ((e) => {
+              e.stopPropagation();
+              onArtistClick();
+            })}
+          >
+            {artist}
+          </span>
+          {' • '}
+          <span 
+            className={cn("transition-colors", onAlbumClick && "cursor-pointer hover:text-primary")}
+            onClick={onAlbumClick && ((e) => {
+              e.stopPropagation();
+              onAlbumClick();
+            })}
+          >
+            {album}
+          </span>
+        </p>
       </div>
     </div>
   );

@@ -28,8 +28,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const [volume, setVolume] = useState(80);
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState(0); // 0: no repeat, 1: repeat all, 2: repeat one
-  const [isControlsVisible, setIsControlsVisible] = useState(true);
-
+  
+  // Remove isControlsVisible state since we no longer need it
+  
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationRef = useRef<number>();
   const navigate = useNavigate();
@@ -107,9 +108,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     }
   };
 
-  const toggleControlsVisibility = () => {
-    setIsControlsVisible(!isControlsVisible);
-  };
+  // We no longer need toggleControlsVisibility function
 
   if (isMinimized) {
     return (
@@ -128,7 +127,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   return (
     <div 
       className={cn("relative w-full h-full", className)}
-      onClick={toggleControlsVisibility}
+      // Remove the onClick handler that was toggling control visibility
     >
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <img
@@ -149,22 +148,17 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             artist={song.artist}
             album={song.album}
             isVisible={true} 
-            isExpanded={isControlsVisible}
+            isExpanded={true} // Always keep it expanded
+            onArtistClick={() => navigate(`/artist/${song.artist}`)}
+            onAlbumClick={() => navigate(`/album/${song.album}`)}
           />
 
-          <div 
-            className={cn(
-              "transition-all duration-500 overflow-hidden",
-              isControlsVisible 
-                ? "max-h-96 opacity-100" 
-                : "max-h-0 opacity-0"
-            )}
-          >
+          <div className="mt-6">
             <ProgressBar
               currentTime={currentTime}
               duration={song.duration}
               onSeek={onSeek}
-              isVisible={isControlsVisible}
+              isVisible={true}
             />
             
             <PlayerControls
@@ -174,7 +168,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
               onPrev={onPrev}
               onToggleRepeat={toggleRepeat}
               onToggleShuffle={toggleShuffle}
-              isVisible={isControlsVisible}
+              isVisible={true}
             />
           </div>
         </div>

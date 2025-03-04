@@ -11,6 +11,8 @@ import Library from "@/pages/Library";
 import Explore from "@/pages/Explore";
 import Player from "@/pages/Player";
 import Settings from "@/pages/Settings";
+import Album from "@/pages/Album";
+import Artist from "@/pages/Artist";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
               <Route path="/explore" element={<Explore />} />
               <Route path="/player" element={<Player />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/album/:albumId" element={<Album />} />
+              <Route path="/artist/:artistId" element={<Artist />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
