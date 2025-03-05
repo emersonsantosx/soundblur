@@ -7,7 +7,7 @@ import TrackItem from '@/components/TrackItem';
 
 const Album = () => {
   const { albumId } = useParams();
-  const { albums, currentSong, playSong } = useMusic();
+  const { albums, currentSong, playSong, playAlbum } = useMusic();
   const navigate = useNavigate();
   
   const album = albums.find(a => a.title === albumId);
@@ -52,7 +52,7 @@ const Album = () => {
           
           <button
             className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
-            onClick={() => playSong(album.songs[0])}
+            onClick={() => playAlbum(album.id)}
           >
             Play
           </button>
