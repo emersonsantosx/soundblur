@@ -7,7 +7,7 @@ import AlbumCard from '@/components/AlbumCard';
 
 const Artist = () => {
   const { artistId } = useParams();
-  const { artists, playArtist } = useMusic();
+  const { artists, playArtist, playAlbum } = useMusic();
   const navigate = useNavigate();
   
   const artist = artists.find(a => a.name === artistId);
@@ -64,8 +64,12 @@ const Artist = () => {
           {artist.albums.map((album) => (
             <AlbumCard
               key={album.id}
-              album={album}
-              onClick={() => navigate(`/album/${album.title}`)}
+              id={album.id}
+              title={album.title}
+              artist={album.artist}
+              coverUrl={album.coverUrl}
+              onPlay={() => playAlbum(album.id)}
+              className=""
             />
           ))}
         </div>

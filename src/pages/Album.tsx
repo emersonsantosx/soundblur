@@ -7,7 +7,7 @@ import TrackItem from '@/components/TrackItem';
 
 const Album = () => {
   const { albumId } = useParams();
-  const { albums, playAlbum } = useMusic();
+  const { albums, currentSong, playSong } = useMusic();
   const navigate = useNavigate();
   
   const album = albums.find(a => a.title === albumId);
@@ -47,18 +47,12 @@ const Album = () => {
         
         <div>
           <h1 className="text-2xl font-bold">{album.title}</h1>
-          <p 
-            className="text-muted-foreground hover:text-primary cursor-pointer transition-colors"
-            onClick={() => navigate(`/artist/${album.artist}`)}
-          >
-            {album.artist}
-          </p>
-          <p className="text-muted-foreground mt-1">{album.year}</p>
+          <p className="text-sm text-muted-foreground">{album.artist} • {album.year}</p>
           <p className="mt-1">{album.songs.length} songs</p>
           
           <button
             className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
-            onClick={() => playAlbum(album.id)}
+            onClick={() => playSong(album.songs[0])}
           >
             Play
           </button>
@@ -67,12 +61,18 @@ const Album = () => {
       
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-4">Songs</h2>
+        
         <div className="space-y-2">
           {album.songs.map((song) => (
             <TrackItem
               key={song.id}
-              song={song}
-              onClick={() => playAlbum(album.id, song.id)}
+              id={song.id}
+              title={song.title}
+              artist={song.artist}
+              duration={song.duration}
+              coverUrl={song.coverUrl}
+              isPlaying={currentSong?.id === song.id}
+              onPlay={() => playSong(song)}
             />
           ))}
         </div>
